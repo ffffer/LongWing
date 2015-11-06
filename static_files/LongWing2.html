@@ -1,0 +1,151 @@
+<html>
+
+<!--
+Author: Kezhen Chen, Fan Jiang
+This is the frontend for the Fakebook web app, which demonstrates CRUD
+with Ajax using a REST API. (../server.js is the backend)
+Start ../server.js and then visit this URL to view this webpage:
+http://localhost:3000/LongWing.html
+-->
+
+<head>
+<title>LongWing</title>
+
+<script src="http://code.jquery.com/jquery-1.11.3.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // define a generic Ajax error handler:
+  // http://api.jquery.com/ajaxerror/
+  $(document).ajaxError(function() {
+    alert("Sorry, there was a problem!");
+  });
+  $("#Search").click(function() {
+    // From: http://learn.jquery.com/ajax/jquery-ajax-methods/
+    // Using the core $.ajax() method
+  
+      $("#results").html("We have found 1 result for you:");
+      $("#carDiv").html("Camery");
+      $("#makeDiv").html("Toyota");
+      $("#ownerDiv").html("Hailey");
+      $("#yearDiv").html("2012");
+
+  });
+
+});
+</script>
+
+  <style type="text/css">
+/* these are CSS comments */
+      body {
+        background-image: url("search_background.jpg");
+        background-size:  cover; 
+        background-repeat:   no-repeat;
+        background-position: center center;
+      }
+      h1{
+        text-align: left;
+        vertical-align: top;
+        line-height: 90px; 
+        font-family: 'Brush Script MT', cursive;
+        font-size: 500%;
+        position: relative;
+        top: 0px;
+      }
+      h2{
+        text-align: left;
+        vertical-align: top;
+        line-height: 90px; 
+        font-family: font-family: "Times New Roman", Times, serif;
+        font-size: 115%;
+        position: absolute;
+        right: 23px;
+        top: 0px;
+      }
+      p{
+        text-align: left;
+        vertical-align: top;
+        position: relative;
+        top: -20px;
+        padding-right: 50px;
+        display: inline;
+      }
+      #results{
+        text-align: left;
+        vertical-align: middle;
+        position: relative;
+        top: 0px
+      }
+      #carDiv{
+        text-align: left;
+        vertical-align: middle;
+        position: relative;
+        top: 25px;
+        padding: 0 20% 0 0;
+        display: inline;
+        font-family: 'Lucida Console', Monospace;
+        font-size: 150%;
+      }
+      #makeDiv{
+        text-align: left;
+        vertical-align: middle;
+        position: relative;
+        top: 25px;
+        padding: 0 15% 0 0;
+        display: inline;
+      }
+      #ownerDiv{
+        text-align: left;
+        vertical-align: middle;
+        position: relative;
+        top: 25px;
+        padding: 0 15% 0 0;
+        display: inline;
+      }
+      #yearDiv{
+        text-align: left;
+        vertical-align: middle;
+        position: relative;
+        top: 25px;
+        padding: 0 15% 0 0;
+        display: inline;
+      }
+      #status{
+        text-align: center;
+        vertical-align: middle;
+        position: relative;
+        top: 100px;
+      }
+
+
+    
+
+    </style>
+</head>
+  <body>
+  <h1>Long Wing</h1>
+  <h2> Welcome back,</h2>
+
+    <p>
+      City: <input id="cityBox" type="text" size="20"/> 
+    </p>
+    <p>  
+      Time Period: <input id="timeBox" type="text" size="20"/>
+    </p>
+    <p>
+      <button id="Search">Search</button>
+    </p>
+    
+    <div id="results"></div>
+
+    <!-- empty placeholders -->
+    <div id="carDiv"></div>
+    <div id="makeDiv"></div>
+    <div id="ownerDiv"></div>
+    <div id="yearDiv"></div>
+
+    <!--hr/-->
+
+    <div id="status"></div>
+  </body>
+</html>
