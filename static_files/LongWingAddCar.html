@@ -13,38 +13,40 @@ http://localhost:3000/LongWing.html
 <title>LongWing</title>
 
 <script src="http://code.jquery.com/jquery-1.11.3.js"></script>
+<script src="jquery.cookie.js"></script>
 
 <script type="text/javascript">
 $(document).ready(function() {
   // define a generic Ajax error handler:
   // http://api.jquery.com/ajaxerror/
+  var CookieSet = $.cookie('usern');
   $(document).ajaxError(function() {
     alert("Sorry, there was a problem!");
   });
 
   $("#Back").click(function() {
-      window.location.href = "LongWing.html";
+      window.location.href = "LongWing2.html";
   });
+
   $("#SignUp").click(function() {
     $.ajax({
       // The URL for the request -- note the simple REST API!
       // all URLs are relative to http://localhost:3000/
-      url: "users/",
+      url: "cars/",
       type: "POST",
       dataType : "text", // this URL returns a plain text string, not JSON
-      data : { name: $("#nameBox").val(),
-               password: $("#passwordBox").val(),
-               fullname: $("#fullnameBox").val(),
-               email: $("#emailBox").val(),
-               telephone: $("#teleBox").val()
+      data : { carmake: $("#carmakeBox").val(),
+               caryear: $("#caryearBox").val(),
+               city: $("#cityBox").val(),
+               username: CookieSet
              },
       success: function( data ) {
         console.log("You received some data!", data);
         if (data == 'OK') {
-          $("#status").html("Successfully created a new user!");
-          window.location.href = "LongWing.html";
+          $("#status").html("Successfully created add a new car!");
+          window.location.href = "LongWing2.html";
         } else {
-          $("#status").html("Error: could not create a new user!");
+          $("#status").html("Error: could not add a new car!");
         }
       },
     });
@@ -57,7 +59,7 @@ $(document).ready(function() {
   <style type="text/css">
 /* these are CSS comments */
       body {
-        background-image: url("bg7.jpg");
+        background-image: url("search_background.jpg");
         background-size:  cover; 
         background-repeat:   no-repeat;
         background-position: center center;
@@ -171,27 +173,21 @@ $(document).ready(function() {
     </style>
 </head>
   <body>
-  <h1>Hello, New User!</h1>
+  <h1>Add New Car</h1>
 
     <p>
-      Username: <input id="nameBox" type="text" size="20"/>
+      Car Type: <input id="carmakeBox" type="text" size="20"/>
     </p>
     <p>
-      Password: <input id="passwordBox" type="password" size="20"/>
-    </p>
-
-    <p>
-      Full name: <input id="fullnameBox" type="text" size="20"/>
+      Year of Car: <input id="caryearBox" type="text" size="20"/>
     </p>
 
     <p>
-      Email: <input id="emailBox" type="text" size="20"/>
+      City: <input id="cityBox" type="text" size="20"/>
     </p>
+
     <p>
-      Telephone Number: <input id="teleBox" type="text" size="20"/>
-    </p>
-    <p>
-      <button id="SignUp">Create New Account</button>
+      <button id="SignUp">Add New Car</button>
     </p>
     <p>
       <button id="Back">Back</button>

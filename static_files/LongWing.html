@@ -13,11 +13,15 @@ http://localhost:3000/LongWing.html
 <title>LongWing</title>
 
 <script src="http://code.jquery.com/jquery-1.11.3.js"></script>
+<script src="jquery.cookie.js"></script>
 
 <script type="text/javascript">
+
 $(document).ready(function() {
+  var CookieSet = $.cookie('usern');
   // define a generic Ajax error handler:
   // http://api.jquery.com/ajaxerror/
+  if(CookieSet==null){
   $(document).ajaxError(function() {
     alert("Sorry, there was a problem!");
   });
@@ -47,7 +51,9 @@ $(document).ready(function() {
       },
     });
 
-  });
+  });}else{
+     window.location.href = "LongWing2.html";
+  }
 
 });
 </script>
