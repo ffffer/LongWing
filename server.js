@@ -22,7 +22,7 @@ var db = new sqlite3.Database(file);
 db.serialize(function(){
 if(!exists){
   db.run("CREATE TABLE User (username TEXT PRIMARY KEY, password TEXT, fullname TEXT, email TEXT, telephone TEXT)");
-  db.run("CREATE TABLE Car (carmake TEXT, caryear TEXT, username TEXT, city TEXT)");
+  db.run("CREATE TABLE Car (carmake TEXT, carmodel TEXT, caryear TEXT, username TEXT, city TEXT, starttime TIMESTAMP, endtime TIMESTAMP)");
   console.log("Creating User table in LongWing database.");
 }
 });
@@ -53,16 +53,17 @@ app.post('/users', function (req, res) {
 app.post('/cars', function (req, res) {
   var postBody = req.body;
   var myCar = postBody.carmake;
+  console.log(postBody.starttime);
+  console.log(postBody.endtime);
 
-  // must have a name!
   if (!myCar) {
     res.send('ERROR');
-    return; // return early!
+    return; 
   }
 
   db.serialize(function(){
-    var stmt = db.prepare("INSERT INTO Car VALUES (?,?,?,?)");
-    stmt.run(myCar, postBody.caryear, postBody.username, postBody.city);
+    var stmt = db.prepare("INSERT INTO Car VALUES (?,?,?,?,?,?,?)");
+    stmt.run(myCar, postBody.carmodel, postBody.caryear, postBody.username, postBody.city,postBody.starttime, postBody.endtime);
     stmt.finalize();
   });
   console.log("Creating a user in database.");
@@ -76,8 +77,11 @@ app.post('/cars', function (req, res) {
 //   curl -X GET http://localhost:3000/users/Philip
 //   curl -X GET http://localhost:3000/users/Jane
 app.get('/cars/*', function (req, res) {
-    var postBody = req.params[0];
-    var argu = "SELECT carmake, caryear, username FROM Car WHERE city='"+postBody+"'";
+    var postBody = req.params[0].split(" ");
+    var retcity = postBody[0];
+    var retst = postBody[1].split("-");
+    var retet = postBody[2].split("-");
+    var argu = "SELECT carmake, caryear, username, starttime, endtime FROM Car WHERE city='"+retcity+"'";
     db.serialize(function(){
       db.all(argu, function(err,row){
           if(err !== null){
@@ -89,10 +93,17 @@ app.get('/cars/*', function (req, res) {
           }else{
             var carlist = [];
             for(i=0; i<row.length; i++){
-              var retval = {carm: row[i].carmake, cary: row[i].caryear, usern: row[i].username, city: row[i].city};
-              carlist.push( retval );
+              var retval = {carm: row[i].carmake, cary: row[i].caryear, usern: row[i].username, city: retcity, starttime: row[i].starttime, endtime: row[i].endtime};
+              var tempst = row[i].starttime.split("-");
+              var tempet = row[i].endtime.split("-");
+              if( ( new Date(tempst[0],tempst[1],tempst[2]) <= new Date(retst[0],retst[1],retst[2]) ) && ( new Date(tempet[0],tempet[1],tempet[2]) >= new Date(retet[0],retet[1],retet[2]) )){
+                carlist.push( retval );
+              }
             }
-            res.send(res.json(carlist));
+            
+            //res.send(res.json(carlist));
+            var retcarlist = {CarRecords: carlist};
+            res.send(retcarlist);
           }
       });
     });
@@ -119,9 +130,9 @@ app.get('/users/*', function (req, res) {
             var retpass = row[0].password;
             var retfullname = row[0].fullname;
             var retval = {name: retname, password: retpass};
-            res.cookie('usern',retname);
-            res.cookie('passw',retpass);
-            res.cookie('fulln',retfullname);
+            res.cookie('usern',retname, {expires : new Date(new Date().getTime() + 60*1000*100)});
+            res.cookie('passw',retpass, {expires : new Date(new Date().getTime() + 60*1000*100)});
+            res.cookie('fulln',retfullname, {expires : new Date(new Date().getTime() + 60*1000*100)});
             res.send(retval);
           }
       });

@@ -36,8 +36,11 @@ $(document).ready(function() {
       type: "POST",
       dataType : "text", // this URL returns a plain text string, not JSON
       data : { carmake: $("#carmakeBox").val(),
+               carmodel: $("#carmodelBox").val(),
                caryear: $("#caryearBox").val(),
                city: $("#cityBox").val(),
+               starttime: $("#starttimeBox").val(),
+               endtime: $("#endtimeBox").val(),
                username: CookieSet
              },
       success: function( data ) {
@@ -176,7 +179,10 @@ $(document).ready(function() {
   <h1>Add New Car</h1>
 
     <p>
-      Car Type: <input id="carmakeBox" type="text" size="20"/>
+      Car Make: <input id="carmakeBox" type="text" size="20"/>
+    </p>
+    <p>
+      Car Model: <input id="carmodelBox" type="text" size="20"/>
     </p>
     <p>
       Year of Car: <input id="caryearBox" type="text" size="20"/>
@@ -184,6 +190,12 @@ $(document).ready(function() {
 
     <p>
       City: <input id="cityBox" type="text" size="20"/>
+    </p>
+    <p>
+      Start Time: <input id="starttimeBox" type="date" />
+    </p>
+    <p>
+      End Time: <input id="endtimeBox" type="date" />
     </p>
 
     <p>
