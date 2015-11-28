@@ -1,0 +1,94 @@
+<html>
+
+<!--
+Author: Kezhen Chen, Fan Jiang
+http://localhost:3000/LongWing.html
+-->
+
+<head>
+<title>LongWing</title>
+
+<script src="http://code.jquery.com/jquery-1.11.3.js"></script>
+<script src="jquery.cookie.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // define a generic Ajax error handler:
+  // http://api.jquery.com/ajaxerror/
+  var CookieSet = $.cookie('fulln');
+  var CookieSet2 = $.cookie('usern');
+  $(document).ajaxError(function() {
+    alert("Sorry, there was a problem!");
+  });
+  $("#Back").click(function() {
+    window.location.href = "LongWing2.html";
+  });
+});
+</script>
+
+  <style type="text/css">
+/* these are CSS comments */
+      body {
+        background-image: url("search_background.jpg");
+        background-size:  cover; 
+        background-repeat:   no-repeat;
+        background-position: center center;
+      }
+      h1{
+        text-align: left;
+        vertical-align: top;
+        line-height: 90px; 
+        font-family: 'Brush Script MT', cursive;
+        font-size: 500%;
+        position: relative;
+        top: 0px;
+      }
+
+      h2{
+        text-align: left;
+        vertical-align: top;
+        line-height: 90px; 
+        font-family: font-family: "Times New Roman", Times, serif;
+        font-size: 115%;
+        position: absolute;
+        right: 23px;
+        top: 20px;
+      }
+
+      #Back {
+        background: #909599;
+        background-image: -webkit-linear-gradient(top, #909599, #3f6780);
+        background-image: -moz-linear-gradient(top, #909599, #3f6780);
+        background-image: -ms-linear-gradient(top, #909599, #3f6780);
+        background-image: -o-linear-gradient(top, #909599, #3f6780);
+        background-image: linear-gradient(to bottom, #909599, #3f6780);
+        -webkit-border-radius: 28;
+        -moz-border-radius: 28;
+        border-radius: 28px;
+        font-family: Arial;
+        color: #ffffff;
+        font-size: 10px;
+        padding: 10px 20px 10px 20px;
+        text-decoration: none;
+      }
+
+
+      #Back:hover {
+        background: #3cb0fd;
+        background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+        background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+        background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+        background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+        background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+        text-decoration: none;
+      }
+
+    </style>
+</head>
+  <body>
+  <h1>Long Wing</h1>
+  <h2>
+      <button id="Back">Back</button>
+  </h2>
+  </body>
+</html>
