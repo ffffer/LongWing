@@ -11,7 +11,7 @@ app.use(express.static('static_files'));
 
 
 var fs = require("fs");
-var file = "/Users/kezhenchen/Documents/cs/cs210/project/LongWingdb.db";
+var file = "LongWingdb.db";
 var exists = fs.existsSync(file);
 if(!exists){
   console.log("Creating LongWing database file.");

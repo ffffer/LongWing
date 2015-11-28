@@ -17,6 +17,7 @@ $(document).ready(function() {
   // http://api.jquery.com/ajaxerror/
   var CookieSet = $.cookie('fulln');
   var CookieSet2 = $.cookie('usern');
+  $("#usernamehtml").text("User Name:   "+CookieSet2);
   $(document).ajaxError(function() {
     alert("Sorry, there was a problem!");
   });
@@ -54,7 +55,27 @@ $(document).ready(function() {
         right: 23px;
         top: 20px;
       }
-
+      h3{
+        position: relative;
+        left: 50px; 
+      }
+      h4{
+        position: relative;
+        left: 50px;
+        text-align: left;
+        vertical-align: top; 
+        font-size: 175%;
+        position: relative;
+        top: 0px;
+      }
+      img{
+        position: relative;
+        left: 50px;  
+      }
+      p{
+        position: relative;
+        left: 50px;
+      }
       #Back {
         background: #909599;
         background-image: -webkit-linear-gradient(top, #909599, #3f6780);
@@ -90,5 +111,28 @@ $(document).ready(function() {
   <h2>
       <button id="Back">Back</button>
   </h2>
+  <h4>Your Account Information</h4>
+  <img id="profileImage" src="http://i.telegraph.co.uk/multimedia/archive/03235/potd-husky_3235255k.jpg" style="width: 300px;"/>
+  <p id="usernamehtml">
+  </p>
+  <p>
+    Email Address: <input id="EmailAddress" type="text" size="20"/>
+  </p>
+  <p>
+    Full Name: <input id="FullName" type="text" size="20"/>
+  </p>
+  <p>
+    Telephone Number: <input id="teleBox" type="text" size="20"/>
+  </p>
+  <p>
+    Profile Picture URL: <input id="picture" type="text" size="20"/>
+  </p>
+  <h3> 
+      <button id="UpdateAccount">Update Your Account</button>
+      <button id="DeleteAccount">Delete Your Account</button>
+  </h3>
+  <h4>Your Current Reservations</h4>
+    <table id="ReservationList" border="1" style="width:100%">
+    </table>
   </body>
 </html>

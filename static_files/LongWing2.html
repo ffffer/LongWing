@@ -54,7 +54,7 @@ $(document).ready(function() {
           $("#CarList").append('<tr><td>Car Make</td><td>Car Model</td> <td>Year</td><td>Owner</td></tr>');
           for(i =0; i <car_list.length; i++){
             var temprecord = car_list[i];
-            $("#CarList").append('<tr><th>'+temprecord.carm+'</th><th>'+temprecord.carmo+'</th><th>'+temprecord.cary+'</th><th>'+temprecord.usern+'</th></tr>');
+            $("#CarList").append('<tr><th>'+temprecord.carm+'</th><th>'+temprecord.carmo+'</th><th>'+temprecord.cary+'</th><th>'+temprecord.usern+'</th><td><button class="RentCar">Rent This Car</button></td></tr>');
           }
           //window.location.href = "LongWing3.html";
         } else {
@@ -285,26 +285,25 @@ $(document).ready(function() {
       <button id="AddCar">Add Car</button>
   </h4>
 
-    <p>
-      City: <input id="cityBox" type="text" size="20"/> 
-    </p>
+  <p>
+    City: <input id="cityBox" type="text" size="20"/> 
+  </p>
 
-    <p>
-      Start Time: <input id="starttimeBox" type="date"/> 
-    </p>
+  <p>
+    Start Time: <input id="starttimeBox" type="date"/> 
+  </p>
 
-    <p>
-      End Time: <input id="endtimeBox" type="date"/> 
-    </p>
-    
-    <p>
-      <button id="Search">Search</button>
-    </p>
-    
-    <p1>
+  <p>
+    End Time: <input id="endtimeBox" type="date"/> 
+  </p>
+  
+  <p>
+    <button id="Search">Search</button>
+  </p>
+  
+  <p1>
     <table id="CarList" border="1" style="width:100%">
     </table>
   </p1>
-
   </body>
 </html>
