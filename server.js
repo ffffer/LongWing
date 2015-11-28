@@ -11,7 +11,7 @@ app.use(express.static('static_files'));
 
 
 var fs = require("fs");
-var file = "/Users/kezhenchen/Documents/cs/cs210/project/LongWingdb.db";
+var file = "LongWingdb.db";
 var exists = fs.existsSync(file);
 if(!exists){
   console.log("Creating LongWing database file.");
@@ -22,12 +22,13 @@ var db = new sqlite3.Database(file);
 db.serialize(function(){
 if(!exists){
   db.run("CREATE TABLE User (username TEXT PRIMARY KEY, password TEXT, fullname TEXT, email TEXT, telephone TEXT)");
-  db.run("CREATE TABLE Car (carmake TEXT, carmodel TEXT, caryear TEXT, username TEXT, city TEXT, starttime TIMESTAMP, endtime TIMESTAMP)");
+  db.run("CREATE TABLE Car (carplate TEXT PRIMARY KEY, carmake TEXT, carmodel TEXT, caryear TEXT, username TEXT, city TEXT, starttime TIMESTAMP, endtime TIMESTAMP, ifreserve TEXT)");
+  db.run("CREATE TABLE Reserve (carplate TEXT PRIMARY KEY, username TEXT, starttime TIMESTAMP, endtime TIMESTAMP)");
   console.log("Creating User table in LongWing database.");
 }
 });
 
-// REST API as described in http://pgbovine.net/rest-web-api-basics.htm
+// REST API as described in http://pgbovine.net/rest-web-api-basics.html
 
 // CREATE a new user
 
@@ -50,6 +51,28 @@ app.post('/users', function (req, res) {
   res.send('OK');
 });
 
+app.post('/reserves', function (req, res) {
+  var postBody = req.body;
+  var carplate = postBody.carplate;
+  var starttime = postBody.starttime;
+  var endtime = postBody.endtime;
+  var usern = req.cookies.usern;
+  var argu2 = "UPDATE Car SET ifreserve='1' WHERE carplate='"+carplate+"'";
+  if (!usern) {
+    res.send('ERROR');
+    return; 
+  }
+
+  db.serialize(function(){
+    var stmt = db.prepare("INSERT INTO Reserve VALUES (?,?,?,?)");
+    stmt.run(carplate,usern, starttime, endtime);
+    stmt.finalize();
+    db.run(argu2);
+  });
+  console.log("Inserting a reserve in database.");
+  res.send('OK');
+});
+
 app.post('/cars', function (req, res) {
   var postBody = req.body;
   var myCar = postBody.carmake;
@@ -62,26 +85,22 @@ app.post('/cars', function (req, res) {
   }
 
   db.serialize(function(){
-    var stmt = db.prepare("INSERT INTO Car VALUES (?,?,?,?,?,?,?)");
-    stmt.run(myCar, postBody.carmodel, postBody.caryear, postBody.username, postBody.city,postBody.starttime, postBody.endtime);
+    var stmt = db.prepare("INSERT INTO Car VALUES (?,?,?,?,?,?,?,?,?)");
+    stmt.run(postBody.carplate, myCar, postBody.carmodel, postBody.caryear, postBody.username, postBody.city,postBody.starttime, postBody.endtime, '0');
     stmt.finalize();
   });
-  console.log("Creating a user in database.");
+  console.log("Inserting a car in database.");
   res.send('OK');
 });
 
 
 // READ profile data for a user
-//
-// To test with curl, run:
-//   curl -X GET http://localhost:3000/users/Philip
-//   curl -X GET http://localhost:3000/users/Jane
 app.get('/cars/*', function (req, res) {
     var postBody = req.params[0].split(" ");
     var retcity = postBody[0];
     var retst = postBody[1].split("-");
     var retet = postBody[2].split("-");
-    var argu = "SELECT carmake, caryear, username, starttime, endtime FROM Car WHERE city='"+retcity+"'";
+    var argu = "SELECT carmake, carmodel ,caryear, username, starttime, endtime FROM Car WHERE city='"+retcity+"' AND ifreserve='0'";
     db.serialize(function(){
       db.all(argu, function(err,row){
           if(err !== null){
@@ -93,7 +112,7 @@ app.get('/cars/*', function (req, res) {
           }else{
             var carlist = [];
             for(i=0; i<row.length; i++){
-              var retval = {carm: row[i].carmake, cary: row[i].caryear, usern: row[i].username, city: retcity, starttime: row[i].starttime, endtime: row[i].endtime};
+              var retval = {carm: row[i].carmake, carmo: row[i].carmodel, cary: row[i].caryear, usern: row[i].username, city: retcity, starttime: row[i].starttime, endtime: row[i].endtime};
               var tempst = row[i].starttime.split("-");
               var tempet = row[i].endtime.split("-");
               if( ( new Date(tempst[0],tempst[1],tempst[2]) <= new Date(retst[0],retst[1],retst[2]) ) && ( new Date(tempet[0],tempet[1],tempet[2]) >= new Date(retet[0],retet[1],retet[2]) )){
@@ -150,13 +169,33 @@ app.get('/users/*', function (req, res) {
     }
 });
 
+//Update a user
+app.put('/users/*', function (req, res) {
+  var postBody = req.params[0].split(" ");
+  var usern = req.cookies.usern;
+  var fulln = postBody[0];
+  var telep = postBody[0];
+  var email = postBody[2];
+  var arg = "UPDATE User SET fullname='"+fulln+"', email='"+email+"',telephone='"+telep+"' WHERE username='"+usern+"'";
+
+  db.serialize(function(){
+    db.run(argu, function(err){
+        if(err !== null){
+          console.log(err);
+          res.send('ERROR');
+        }else{
+          res.send('OK');
+        }
+    });
+  });
+});
 // DELETE a user
 app.delete('/users/*', function (req, res) {
   var nameToLookup = req.params[0]; // this matches the '*' part of '/users/*' above
   // try to look up in fakeDatabase
   var argu = "DELETE FROM User WHERE username='"+nameToLookup+"'";
   db.serialize(function(){
-    db.run(argu, function(err,row){
+    db.run(argu, function(err){
         //var retval = {name: row.username, password: row.password};
         //console.log(retval);
         if(err !== null){
@@ -167,9 +206,27 @@ app.delete('/users/*', function (req, res) {
         }
     });
   });
-
 });
 
+app.delete('/reserves/*', function (req, res) {
+  var carplate = req.params[0]; // this matches the '*' part of '/users/*' above
+  
+  var argu = "DELETE FROM Reserve WHERE carplate='"+carplate+"'";
+  var argu2 = "UPDATE Car SET ifreserve='0' WHERE carplate='"+carplate+"'";
+  db.serialize(function(){
+    db.run(argu2);
+    db.run(argu, function(err){
+        //var retval = {name: row.username, password: row.password};
+        //console.log(retval);
+        if(err !== null){
+          console.log(err);
+          res.send('ERROR');
+        }else{
+          res.send('OK');
+        }
+    });
+  });
+});
 
 // start the server on http://localhost:3000/
 var server = app.listen(3000, function () {

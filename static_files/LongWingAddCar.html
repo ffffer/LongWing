@@ -35,7 +35,8 @@ $(document).ready(function() {
       url: "cars/",
       type: "POST",
       dataType : "text", // this URL returns a plain text string, not JSON
-      data : { carmake: $("#carmakeBox").val(),
+      data : { carplate: $("#carplateBox").val(),
+               carmake: $("#carmakeBox").val(),
                carmodel: $("#carmodelBox").val(),
                caryear: $("#caryearBox").val(),
                city: $("#cityBox").val(),
@@ -177,6 +178,10 @@ $(document).ready(function() {
 </head>
   <body>
   <h1>Add New Car</h1>
+
+    <p>
+      Car Plate: <input id="carplateBox" type="text" size="20"/>
+    </p>
 
     <p>
       Car Make: <input id="carmakeBox" type="text" size="20"/>
