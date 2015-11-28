@@ -33,6 +33,9 @@ $(document).ready(function() {
     $.removeCookie('fulln', { path: '/' });
     window.location.href = "LongWing.html";
   });
+  $("#Account").click(function() {
+    window.location.href = "UserAccount.html";
+  });
   $("#AddCar").click(function() {
     window.location.href = "LongWingAddCar.html";
   });
@@ -44,9 +47,15 @@ $(document).ready(function() {
       dataType : "json", // this URL returns data in JSON format
       success: function( data ) {
         console.log("You received some data!", data);
-        if (data.CarRecords) {
+        var car_list = data.CarRecords
+        if (car_list) {
+          $("#CarList").empty();
           $("#results").html("Successfully get results!");
-
+          $("#CarList").append('<tr><td>Car Make</td><td>Car Model</td> <td>Year</td><td>Owner</td></tr>');
+          for(i =0; i <car_list.length; i++){
+            var temprecord = car_list[i];
+            $("#CarList").append('<tr><th>'+temprecord.carm+'</th><th>'+temprecord.carmo+'</th><th>'+temprecord.cary+'</th><th>'+temprecord.usern+'</th></tr>');
+          }
           //window.location.href = "LongWing3.html";
         } else {
           $("#results").html("Not found any results.");
@@ -83,7 +92,7 @@ $(document).ready(function() {
         font-family: font-family: "Times New Roman", Times, serif;
         font-size: 200%;
         position: absolute;
-        right: 125px;
+        right: 225px;
         top: -10px;
       }
       h3{
@@ -94,7 +103,7 @@ $(document).ready(function() {
         font-size: 115%;
         position: absolute;
         right: 23px;
-        top: 23px;
+        top: -5px;
       }
       h4{
         text-align: left;
@@ -114,13 +123,21 @@ $(document).ready(function() {
         padding-right: 50px;
         display: inline;
       }
+      p1{
+        text-align: left;
+        vertical-align: top;
+        position: relative;
+        top: 40px;
+        padding-right: 50px;
+        display: inline;
+      }
       #results{
         text-align: left;
         vertical-align: middle;
         position: relative;
         top: 20px
       }
-      #carDiv{
+      #makeDiv{
         text-align: left;
         vertical-align: middle;
         position: relative;
@@ -130,7 +147,7 @@ $(document).ready(function() {
         font-family: 'Lucida Console', Monospace;
         font-size: 150%;
       }
-      #makeDiv{
+      #modelDiv{
         text-align: left;
         vertical-align: middle;
         position: relative;
@@ -190,6 +207,33 @@ $(document).ready(function() {
         text-decoration: none;
       }
 
+      #Account {
+        background: #909599;
+        background-image: -webkit-linear-gradient(top, #909599, #3f6780);
+        background-image: -moz-linear-gradient(top, #909599, #3f6780);
+        background-image: -ms-linear-gradient(top, #909599, #3f6780);
+        background-image: -o-linear-gradient(top, #909599, #3f6780);
+        background-image: linear-gradient(to bottom, #909599, #3f6780);
+        -webkit-border-radius: 28;
+        -moz-border-radius: 28;
+        border-radius: 28px;
+        font-family: Arial;
+        color: #ffffff;
+        font-size: 10px;
+        padding: 10px 20px 10px 20px;
+        text-decoration: none;
+      }
+
+      #Account:hover {
+        background: #3cb0fd;
+        background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+        background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+        background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+        background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+        background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+        text-decoration: none;
+      }
+
       #AddCar {
        background: #909599;
         background-image: -webkit-linear-gradient(top, #909599, #3f6780);
@@ -217,6 +261,15 @@ $(document).ready(function() {
         text-decoration: none;
       }
     
+      td{
+        font-family:sans-serif;
+        font-size:20pt;
+        text-align: center;
+      }
+      th{
+        font-family:sans-serif;
+        font-size:15pt;
+      }
 
     </style>
 </head>
@@ -225,7 +278,9 @@ $(document).ready(function() {
   <h2> Welcome back</h2>
   <h3>
       <button id="SignOut">Sign Out</button>
+      <button id="Account">Your Account</button>
   </h3>
+
   <h4>
       <button id="AddCar">Add Car</button>
   </h4>
@@ -246,11 +301,10 @@ $(document).ready(function() {
       <button id="Search">Search</button>
     </p>
     
-    <div id="results"></div>
-    <div id="carDiv"></div>
-    <div id="makeDiv"></div>
-    <div id="ownerDiv"></div>
-    <div id="yearDiv"></div>
-    <div id="status"></div>
+    <p1>
+    <table id="CarList" border="1" style="width:100%">
+    </table>
+  </p1>
+
   </body>
 </html>
