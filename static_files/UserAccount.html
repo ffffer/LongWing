@@ -17,9 +17,94 @@ $(document).ready(function() {
   // http://api.jquery.com/ajaxerror/
   var CookieSet = $.cookie('fulln');
   var CookieSet2 = $.cookie('usern');
+
   $("#usernamehtml").text("User Name:   "+CookieSet2);
   $(document).ajaxError(function() {
     alert("Sorry, there was a problem!");
+  });
+
+
+  $.ajax({
+      url: "users/" +$.cookie('usern')+" "+$.cookie('passw'),
+      type: "GET",
+      dataType : "json", 
+      success: function( data ) {
+        console.log("You received some data!", data);
+        if (data.name) {
+          var email = data.email;
+          var tele = data.telephone;
+          var fullname = data.fullname;
+          $("#EmailAddress").attr('value',email);
+          $("#FullName").attr('value',fullname);
+          $("#teleBox").attr('value',tele);
+
+        } else {
+          console.log("Error");
+          window.location.href = "LongWing.html";
+        }
+      },
+    });
+
+  $.ajax({
+      url: "reserves/" +CookieSet2,
+      type: "GET",
+      dataType : "json", // this URL returns data in JSON format
+      success: function( data ) {
+        console.log("You received some data!", data);
+        var car_list = data.CarRecords
+        if (car_list) {
+          $("#ReservationList").empty();
+          $("#ReservationList").append('<tr><td>Car Plate</td><td>Start Time</td> <td>End Time</td></tr>');
+          for(i =0; i <car_list.length; i++){
+            var temprecord = car_list[i];
+
+            $("#ReservationList").append('<tr><th>'+temprecord.carplate+'</th><th>'+temprecord.starttime+'</th><th>'+temprecord.endtime+'</th></tr>');
+          }
+          //window.location.href = "LongWing3.html";
+        } else {
+          $("#results").html("Not found any results.");
+        }
+      },
+    });
+
+  $("#UpdateAccount").click(function() {
+    $.ajax({
+      // The URL for the request -- note the simple REST API!
+      // all URLs are relative to http://localhost:3000/
+      url: "users/" + $("#FullName").val()+" "+$("#teleBox").val()+" "+$("#EmailAddress").val(),
+      type: "PUT",
+      dataType : "text", 
+      success: function( data ) {
+        console.log("You received some data!", data);
+        if (data == 'OK') {
+          $("#status").html("Successfully updated user");
+        } else {
+          $("#status").html("Error: could not update user");
+        }
+      },
+    });
+  });
+
+  $("#DeleteAccount").click(function() {
+    $.ajax({
+      // The URL for the request -- note the simple REST API!
+      // all URLs are relative to http://localhost:3000/
+      url: "users/" + CookieSet2,
+      type: "DELETE",
+      dataType : "text", // this URL returns a plain text string, not JSON
+      success: function( data ) {
+        console.log("You received some data!", data);
+        if (data == 'OK') {
+          $("#status").html("Successfully deleted!");
+          $.removeCookie('usern', { path: '/' });
+          $.removeCookie('passw', { path: '/' });
+          $.removeCookie('fulln', { path: '/' });
+          window.location.href = "LongWing.html";
+        } else {
+          $("#status").html("Error: could not delete!");
+        }
+      },
+    });
   });
   $("#Back").click(function() {
     window.location.href = "LongWing2.html";
@@ -115,6 +200,7 @@ $(document).ready(function() {
   <img id="profileImage" src="http://i.telegraph.co.uk/multimedia/archive/03235/potd-husky_3235255k.jpg" style="width: 300px;"/>
   <p id="usernamehtml">
   </p>
+
   <p>
     Email Address: <input id="EmailAddress" type="text" size="20"/>
   </p>
@@ -122,10 +208,10 @@ $(document).ready(function() {
     Full Name: <input id="FullName" type="text" size="20"/>
   </p>
   <p>
-    Telephone Number: <input id="teleBox" type="text" size="20"/>
+    Telephone Number: <input id="teleBox" type="text" size="20" />
   </p>
   <p>
-    Profile Picture URL: <input id="picture" type="text" size="20"/>
+    Profile Picture URL: <input id="picture" type="text" size="20" value="http://i.telegraph.co.uk/multimedia/archive/03235/potd-husky_3235255k.jpg"/>
   </p>
   <h3> 
       <button id="UpdateAccount">Update Your Account</button>

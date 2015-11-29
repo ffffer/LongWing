@@ -19,6 +19,7 @@ $(document).ready(function() {
   // define a generic Ajax error handler:
   // http://api.jquery.com/ajaxerror/
   var CookieSet = $.cookie('fulln');
+  var CookieSet2 = $.cookie('usern');
   $(document).ajaxError(function() {
     alert("Sorry, there was a problem!");
   });
@@ -40,6 +41,7 @@ $(document).ready(function() {
     window.location.href = "LongWingAddCar.html";
   });
 
+
   $("#Search").click(function() {
     $.ajax({
       url: "cars/" + $("#cityBox").val()+" " + $("#starttimeBox").val()+" "+$("#endtimeBox").val(),
@@ -54,7 +56,33 @@ $(document).ready(function() {
           $("#CarList").append('<tr><td>Car Make</td><td>Car Model</td> <td>Year</td><td>Owner</td></tr>');
           for(i =0; i <car_list.length; i++){
             var temprecord = car_list[i];
-            $("#CarList").append('<tr><th>'+temprecord.carm+'</th><th>'+temprecord.carmo+'</th><th>'+temprecord.cary+'</th><th>'+temprecord.usern+'</th><td><button class="RentCar">Rent This Car</button></td></tr>');
+
+
+            var newButton = $('<tr><th>'+temprecord.carm+'</th><th>'+temprecord.carmo+'</th><th>'+temprecord.cary+'</th><th>'+temprecord.usern+'<th><button>Rent This Car</button></th></tr>');
+            newButton.on('click',function () {
+                $.ajax({
+                url: "reserves/",
+                type: "POST",
+                dataType : "text", 
+                data : { carplate: temprecord.carpla,
+                         starttime: $("#starttimeBox").val(),
+                         endtime: $("#endtimeBox").val(),
+                         username: CookieSet2
+                       },
+                success: function( data ) {
+                  console.log("Successfully reserved a car!", data);
+                  if (data == 'OK') {
+                    console.log("Successfully reserved a car!");
+                  } else {
+                    console.log("Error: could not reserve a car!");
+                  }
+                },
+              });
+            });
+
+
+            //$("#CarList").append('<tr><th>'+temprecord.carm+'</th><th>'+temprecord.carmo+'</th><th>'+temprecord.cary+'</th><th>'+temprecord.usern+'</th>');
+            $("#CarList").append(newButton);
           }
           //window.location.href = "LongWing3.html";
         } else {

@@ -56,7 +56,7 @@ app.post('/reserves', function (req, res) {
   var carplate = postBody.carplate;
   var starttime = postBody.starttime;
   var endtime = postBody.endtime;
-  var usern = req.cookies.usern;
+  var usern = postBody.username;
   var argu2 = "UPDATE Car SET ifreserve='1' WHERE carplate='"+carplate+"'";
   if (!usern) {
     res.send('ERROR');
@@ -100,7 +100,7 @@ app.get('/cars/*', function (req, res) {
     var retcity = postBody[0];
     var retst = postBody[1].split("-");
     var retet = postBody[2].split("-");
-    var argu = "SELECT carmake, carmodel ,caryear, username, starttime, endtime FROM Car WHERE city='"+retcity+"' AND ifreserve='0'";
+    var argu = "SELECT carplate, carmake, carmodel ,caryear, username, starttime, endtime FROM Car WHERE city='"+retcity+"' AND ifreserve='0'";
     db.serialize(function(){
       db.all(argu, function(err,row){
           if(err !== null){
@@ -112,7 +112,7 @@ app.get('/cars/*', function (req, res) {
           }else{
             var carlist = [];
             for(i=0; i<row.length; i++){
-              var retval = {carm: row[i].carmake, carmo: row[i].carmodel, cary: row[i].caryear, usern: row[i].username, city: retcity, starttime: row[i].starttime, endtime: row[i].endtime};
+              var retval = {carpla: row[i].carplate,carm: row[i].carmake, carmo: row[i].carmodel, cary: row[i].caryear, usern: row[i].username, city: retcity, starttime: row[i].starttime, endtime: row[i].endtime};
               var tempst = row[i].starttime.split("-");
               var tempet = row[i].endtime.split("-");
               if( ( new Date(tempst[0],tempst[1],tempst[2]) <= new Date(retst[0],retst[1],retst[2]) ) && ( new Date(tempet[0],tempet[1],tempet[2]) >= new Date(retet[0],retet[1],retet[2]) )){
@@ -126,16 +126,15 @@ app.get('/cars/*', function (req, res) {
           }
       });
     });
-    
 });
 
 
-app.get('/users/*', function (req, res) {
-  if(!req.cookies.usern){
-    var postBody = req.params[0].split(" ");
-    var nameToLookup = postBody[0];
-    var passToLookup = postBody[1];
-    var argu = "SELECT username, password, fullname FROM User WHERE username='"+nameToLookup+"' AND password='"+passToLookup+"'";
+app.get('/reserves/*', function (req, res) {
+    var postBody = req.cookies.usern;
+    if(postBody==null){
+      res.send('{}');
+    }
+    var argu = "SELECT carplate, starttime, endtime FROM Reserve WHERE username='"+postBody+"'";
     db.serialize(function(){
       db.all(argu, function(err,row){
           if(err !== null){
@@ -145,28 +144,51 @@ app.get('/users/*', function (req, res) {
           if(row.length==0){
             res.send('{}');
           }else{
+            var carlist = [];
+            for(i=0; i<row.length; i++){
+              var retval = {carplate: row[i].carplate, starttime: row[i].starttime, endtime: row[i].endtime};
+              carlist.push( retval );
+            }
+            
+            //res.send(res.json(carlist));
+            var retcarlist = {CarRecords: carlist};
+            res.send(retcarlist);
+          }
+      });
+    });
+});
+
+app.get('/users/*', function (req, res) {
+    var postBody = req.params[0].split(" ");
+    var nameToLookup = postBody[0];
+    var passToLookup = postBody[1];
+    var argu = "SELECT username, password, fullname, email, telephone FROM User WHERE username='"+nameToLookup+"' AND password='"+passToLookup+"'";
+    db.serialize(function(){
+      db.all(argu, function(err,row){
+          if(err !== null){
+            console.log(err);
+            res.send('{}');
+          }
+          if(row.length==0){
+            console.log('lallal');
+            res.send('{}');
+          }else{
             var retname = row[0].username;
             var retpass = row[0].password;
             var retfullname = row[0].fullname;
-            var retval = {name: retname, password: retpass};
+            var retemail = row[0].email;
+            var rettele = row[0].telephone;
+            var retval = {name: retname, password: retpass, fullname: retfullname, email: retemail, telephone: rettele};
+            if(req.cookies.usern==null){
             res.cookie('usern',retname, {expires : new Date(new Date().getTime() + 60*1000*100)});
             res.cookie('passw',retpass, {expires : new Date(new Date().getTime() + 60*1000*100)});
             res.cookie('fulln',retfullname, {expires : new Date(new Date().getTime() + 60*1000*100)});
+          }
+          console.log(retval);
             res.send(retval);
           }
       });
-    });}
-    else{
-      var usern = req.cookies.usern;
-      var argu2 = "SELECT password FROM User WHERE username='"+usern+"'";
-      db.serialize(function(){
-      db.all(argu2, function(err,row){
-            var retpass = row[0].password;
-            var retval = {name: usern, password: retpass};
-            res.send(retval);
-      });
     });
-    }
 });
 
 //Update a user
@@ -174,12 +196,14 @@ app.put('/users/*', function (req, res) {
   var postBody = req.params[0].split(" ");
   var usern = req.cookies.usern;
   var fulln = postBody[0];
-  var telep = postBody[0];
+  var telep = postBody[1];
   var email = postBody[2];
   var arg = "UPDATE User SET fullname='"+fulln+"', email='"+email+"',telephone='"+telep+"' WHERE username='"+usern+"'";
-
+  if(usern==null){
+    res.send('ERROR');
+  }
   db.serialize(function(){
-    db.run(argu, function(err){
+    db.run(arg, function(err){
         if(err !== null){
           console.log(err);
           res.send('ERROR');
@@ -191,17 +215,17 @@ app.put('/users/*', function (req, res) {
 });
 // DELETE a user
 app.delete('/users/*', function (req, res) {
-  var nameToLookup = req.params[0]; // this matches the '*' part of '/users/*' above
-  // try to look up in fakeDatabase
+  var nameToLookup = req.params[0]; 
   var argu = "DELETE FROM User WHERE username='"+nameToLookup+"'";
   db.serialize(function(){
     db.run(argu, function(err){
         //var retval = {name: row.username, password: row.password};
         //console.log(retval);
         if(err !== null){
-          console.log(err);
+          console.log('Error');
           res.send('ERROR');
         }else{
+          console.log('OK');
           res.send('OK');
         }
     });
