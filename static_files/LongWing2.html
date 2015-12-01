@@ -2,8 +2,6 @@
 
 <!--
 Author: Kezhen Chen, Fan Jiang
-This is the frontend for the Fakebook web app, which demonstrates CRUD
-with Ajax using a REST API. (../server.js is the backend)
 Start ../server.js and then visit this URL to view this webpage:
 http://localhost:3000/LongWing.html
 -->
@@ -16,8 +14,7 @@ http://localhost:3000/LongWing.html
 
 <script type="text/javascript">
 $(document).ready(function() {
-  // define a generic Ajax error handler:
-  // http://api.jquery.com/ajaxerror/
+
   var CookieSet = $.cookie('fulln');
   var CookieSet2 = $.cookie('usern');
   $(document).ajaxError(function() {
