@@ -71,7 +71,7 @@ $(document).ready(function() {
     $.ajax({
       // The URL for the request -- note the simple REST API!
       // all URLs are relative to http://localhost:3000/
-      url: "users/" + $("#FullName").val()+" "+$("#teleBox").val()+" "+$("#EmailAddress").val(),
+      url: "users/" + $("#FullName").val()+"-"+$("#teleBox").val()+"-"+$("#EmailAddress").val(),
       type: "PUT",
       dataType : "text", 
       success: function( data ) {
