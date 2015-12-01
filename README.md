@@ -10,3 +10,5 @@ For people who rent cars: The price is relative low, because price negotiation i
 Minimum project requirements: All minimum requirements are met - create, read, update, delete, Ajax.
 
 Uniqueness and Creativity: Besides minimum requirements, we may also implement the Google map Application in order to help people locate available cars in different places.
+
+Presentation Video: https://youtu.be/eRIKyDR5-PU 
