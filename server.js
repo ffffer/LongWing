@@ -193,7 +193,7 @@ app.get('/users/*', function (req, res) {
 
 //Update a user
 app.put('/users/*', function (req, res) {
-  var postBody = req.params[0].split(" ");
+  var postBody = req.params[0].split("-");
   var usern = req.cookies.usern;
   var fulln = postBody[0];
   var telep = postBody[1];
