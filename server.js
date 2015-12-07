@@ -22,7 +22,7 @@ var db = new sqlite3.Database(file);
 db.serialize(function(){
 if(!exists){
   db.run("CREATE TABLE User (username TEXT PRIMARY KEY, password TEXT, fullname TEXT, email TEXT, telephone TEXT)");
-  db.run("CREATE TABLE Car (carplate TEXT PRIMARY KEY, carmake TEXT, carmodel TEXT, caryear TEXT, username TEXT, city TEXT, starttime TIMESTAMP, endtime TIMESTAMP, ifreserve TEXT)");
+  db.run("CREATE TABLE Car (carplate TEXT PRIMARY KEY, carmake TEXT, carmodel TEXT, caryear TEXT, username TEXT, city TEXT, state TEXT , starttime TIMESTAMP, endtime TIMESTAMP, description TEXT , ifreserve TEXT)");
   db.run("CREATE TABLE Reserve (carplate TEXT PRIMARY KEY, username TEXT, starttime TIMESTAMP, endtime TIMESTAMP)");
   console.log("Creating User table in LongWing database.");
 }
@@ -56,6 +56,8 @@ app.post('/reserves', function (req, res) {
   var carplate = postBody.carplate;
   var starttime = postBody.starttime;
   var endtime = postBody.endtime;
+  var catstarttime = postBody.carstarttime;
+  var catendtime = postBody.carendtime;
   var usern = postBody.username;
   var argu2 = "UPDATE Car SET ifreserve='1' WHERE carplate='"+carplate+"'";
   if (!usern) {
@@ -76,6 +78,7 @@ app.post('/reserves', function (req, res) {
 app.post('/cars', function (req, res) {
   var postBody = req.body;
   var myCar = postBody.carmake;
+  var myCity = postBody.city.toLowerCase();
   console.log(postBody.starttime);
   console.log(postBody.endtime);
 
@@ -85,8 +88,8 @@ app.post('/cars', function (req, res) {
   }
 
   db.serialize(function(){
-    var stmt = db.prepare("INSERT INTO Car VALUES (?,?,?,?,?,?,?,?,?)");
-    stmt.run(postBody.carplate, myCar, postBody.carmodel, postBody.caryear, postBody.username, postBody.city,postBody.starttime, postBody.endtime, '0');
+    var stmt = db.prepare("INSERT INTO Car VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+    stmt.run(postBody.carplate, myCar, postBody.carmodel, postBody.caryear, postBody.username, myCity, postBody.state, postBody.starttime, postBody.endtime, postBody.description,'0');
     stmt.finalize();
   });
   console.log("Inserting a car in database.");
@@ -96,11 +99,12 @@ app.post('/cars', function (req, res) {
 
 // READ profile data for a user
 app.get('/cars/*', function (req, res) {
-    var postBody = req.params[0].split(" ");
-    var retcity = postBody[0];
-    var retst = postBody[1].split("-");
-    var retet = postBody[2].split("-");
-    var argu = "SELECT carplate, carmake, carmodel ,caryear, username, starttime, endtime FROM Car WHERE city='"+retcity+"' AND ifreserve='0'";
+    var postBody = req.params[0].split("+");
+    var retcity = postBody[0].toLowerCase();
+    var retstate = postBody[1];
+    var retst = postBody[2].split("-");
+    var retet = postBody[3].split("-");
+    var argu = "SELECT carplate, carmake, carmodel ,caryear, username, starttime, endtime, description FROM Car WHERE city='"+retcity+"' AND state='"+retstate+"' AND ifreserve='0'";
     db.serialize(function(){
       db.all(argu, function(err,row){
           if(err !== null){
@@ -112,7 +116,7 @@ app.get('/cars/*', function (req, res) {
           }else{
             var carlist = [];
             for(i=0; i<row.length; i++){
-              var retval = {carpla: row[i].carplate,carm: row[i].carmake, carmo: row[i].carmodel, cary: row[i].caryear, usern: row[i].username, city: retcity, starttime: row[i].starttime, endtime: row[i].endtime};
+              var retval = {carpla: row[i].carplate,carm: row[i].carmake, carmo: row[i].carmodel, cary: row[i].caryear, usern: row[i].username, city: retcity, state: retstate, starttime: row[i].starttime, endtime: row[i].endtime, description: row[i].description};
               var tempst = row[i].starttime.split("-");
               var tempet = row[i].endtime.split("-");
               if( ( new Date(tempst[0],tempst[1],tempst[2]) <= new Date(retst[0],retst[1],retst[2]) ) && ( new Date(tempet[0],tempet[1],tempet[2]) >= new Date(retet[0],retet[1],retet[2]) )){
