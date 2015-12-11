@@ -29,8 +29,10 @@ $(document).ready(function() {
                carmodel: $("#carmodelBox").val(),
                caryear: $("#caryearBox").val(),
                city: $("#cityBox").val(),
+               state: $("#state").val(),
                starttime: $("#starttimeBox").val(),
                endtime: $("#endtimeBox").val(),
+               description: $("#descriptionBox").val(),
                username: CookieSet
              },
       success: function( data ) {
@@ -52,7 +54,7 @@ $(document).ready(function() {
   <style type="text/css">
 /* these are CSS comments */
       body {
-        background-image: url("search_background.jpg");
+        background-image: url("background2.jpg");
         background-size:  cover; 
         background-repeat:   no-repeat;
         background-position: center center;
@@ -185,11 +187,70 @@ $(document).ready(function() {
     <p>
       City: <input id="cityBox" type="text" size="20"/>
     </p>
+
+      <p>
+    <select name="state" id="state">
+    <option>Alabama</option>
+    <option>Alaska</option>
+    <option>Arizona</option>
+    <option>Arkansas</option>
+    <option>California</option>
+    <option>Colorado</option>
+    <option>Connecticut</option>
+    <option>Delaware</option>
+    <option>Florida</option>
+    <option>Georgia</option>
+    <option>Hawaii</option>
+    <option>Idaho</option>
+    <option>Illinois</option>
+    <option>Indiana</option>
+    <option>Iowa</option>
+    <option>Kansas</option>
+    <option>Kentucky</option>
+    <option>Louisiana</option>
+    <option>Maine</option>
+    <option>Maryland</option>
+    <option>Massachusetts</option>
+    <option>Michigan</option>
+    <option>Minnesota</option>
+    <option>Mississippi</option>
+    <option>Missouri</option>
+    <option>Montana</option>
+    <option>Nebraska</option>
+    <option>Nevada</option>
+    <option>New Hampshire</option>
+    <option>New Jersey</option>
+    <option>New Mexico</option>
+    <option>New York</option>
+    <option>North Carolina</option>
+    <option>North Dakota</option>
+    <option>Ohio</option>
+    <option>Oklahoma</option>
+    <option>Oregon</option>
+    <option>Pennsylvania</option>
+    <option>Rhode Island</option>
+    <option>South Carolina</option>
+    <option>South Dakota</option>
+    <option>Tennessee</option>
+    <option>Texas</option>
+    <option>Utah</option>
+    <option>Vermont</option>
+    <option>Virginia</option>
+    <option>Washington</option>
+    <option>West Virginia</option>
+    <option>Wisconsin</option>
+    <option>Wyoming</option>
+    </select>
+  </p>
+
     <p>
       Start Time: <input id="starttimeBox" type="date" />
     </p>
     <p>
       End Time: <input id="endtimeBox" type="date" />
+    </p>
+    <p>
+      Description: <input id="descriptionBox" type="text" size="20"/>
     </p>
 
     <p>

@@ -39,7 +39,7 @@ $(document).ready(function() {
   });
 
 
-$("#Search").click(function() {
+  $("#Search").click(function() {
     $.ajax({
       url: "cars/" + $("#cityBox").val()+"+"+$("#state").val()+"+" + $("#starttimeBox").val()+"+"+$("#endtimeBox").val(),
       type: "GET",
@@ -62,78 +62,9 @@ $("#Search").click(function() {
                 type: "POST",
                 dataType : "text", 
                 data : { carplate: temprecord.carpla,
-                         carmake: temprecord.carm,
-                         carmodel: temprecord.carmo,
-                         caryear: temprecord.cary,
-                         city: temprecord.city,
-                         state: temprecord.state,
-                         carowner: temprecord.usern,
-                         cardescription: temprecord.description,
-                         starttime: $("#starttimeBox").val(),
-                         endtime: $("#endtimeBox").val(),
-                         username: CookieSet2,
-                         carendtime: temprecord.endtime,
-                         carstarttime: temprecord.starttime
-                       },
-                success: function( data ) {
-                  console.log("Successfully reserved a car!", data);
-                  if (data == 'OK') {
-                    $("#status").html("Successfully reserved a car!");
-                  } else {
-                    $("#status").html("Error: You cannot reserve your own car");
-                  }
-                },
-              });
-            });
-
-
-            //$("#CarList").append('<tr><th>'+temprecord.carm+'</th><th>'+temprecord.carmo+'</th><th>'+temprecord.cary+'</th><th>'+temprecord.usern+'</th>');
-            $("#CarList").append(newButton);
-          }
-          //window.location.href = "LongWing3.html";
-        } else {
-          $("#results").html("Not found any results.");
-        }
-      },
-    });
-
-  });
-
-  /*$("#Search").click(function() {
-    $.ajax({
-      url: "cars/" + $("#cityBox").val()+"+"+$("#state").val()+"+" + $("#starttimeBox").val()+"+"+$("#endtimeBox").val(),
-      type: "GET",
-      dataType : "json", // this URL returns data in JSON format
-      success: function( data ) {
-        console.log("You received some data!", data);
-        var car_list = data.CarRecords
-        if (car_list) {
-          $("#CarList").empty();
-          $("#results").html("Successfully get results!");
-          $("#CarList").append('<tr><td>Car Make</td><td>Car Model</td> <td>Year</td><td>Owner</td><td>Description</td></tr>');
-          for(i =0; i <car_list.length; i++){
-            var temprecord = car_list[i];
-
-
-            var newButton = $('<tr><th>'+temprecord.carm+'</th><th>'+temprecord.carmo+'</th><th>'+temprecord.cary+'</th><th>'+temprecord.usern+'</th><th>'+temprecord.description+'</th><th><button>Rent This Car</button></th></tr>');
-            newButton.on('click',function () {
-                $.ajax({
-                url: "reserves/",
-                type: "POST",
-                dataType : "text", 
-                data : { carplate: temprecord.carpla,
-                         carmake: temprecord.carm,
-                         carmodel: temprecord.carmo,
-                         caryear: temprecord.cary,
-                         city: temprecord.city,
-                         state: temprecord.state,
-                         carowner: temprecord.usern,
-                         cardescription: temprecord.description,
                          starttime: $("#starttimeBox").val(),
                          endtime: $("#endtimeBox").val(),
                          username: CookieSet2
-                         carendtime: temprecord.endtime,
-                         carstarttime: temprecord.starttime
                        },
                 success: function( data ) {
                   console.log("Successfully reserved a car!", data);
@@ -157,7 +88,7 @@ $("#Search").click(function() {
       },
     });
 
-  });*/
+  });
 
 });
 </script>
@@ -211,22 +142,15 @@ $("#Search").click(function() {
         
       }
       p{
-        text-align: left;
+        text-align: center;
         vertical-align: top;
-        position: relative;
-        top: 20px;
-        padding-right: 50px;
-        display: inline;
+        font-family: font-family: "Times New Roman", Times, serif;
+        font-size: 130%;
+        color:white;
+        top: 10px;
+        padding-right: 100px;
+        padding-left: 100px;
       }
-      p1{
-        text-align: left;
-        vertical-align: top;
-        position: relative;
-        top: 40px;
-        padding-right: 50px;
-        display: inline;
-      }
-
       ul {
           list-style-type: none;
           margin: 0;
@@ -414,93 +338,18 @@ $("#Search").click(function() {
     <ul>
       <li><a href="About.html">About</a></li>
       <li><a href="Contact.html">Contact</a></li>
-      <li><a href="LongWingAddCar.html">Add car</a></li>
-      <li><a href="LongWing2_searchuser.html">Search User</a></li> 
+      <li><a href="LongWingAddCar.html">Add car</a></li> 
+      <li><a href="LongWing2_searchuser.html">Search User</a></li>
       <li><a href="LongWing2.html">Search Car</a></li>
     </ul>
   </h4>
 
   <p>
-    City: <input id="cityBox" type="text" size="20"/> 
+    Kezhen Chen: kchen33@u.rochester.edu
   </p>
-
   <p>
-    <select name="state" id="state">
-    <option>Alabama</option>
-    <option>Alaska</option>
-    <option>Arizona</option>
-    <option>Arkansas</option>
-    <option>California</option>
-    <option>Colorado</option>
-    <option>Connecticut</option>
-    <option>Delaware</option>
-    <option>Florida</option>
-    <option>Georgia</option>
-    <option>Hawaii</option>
-    <option>Idaho</option>
-    <option>Illinois</option>
-    <option>Indiana</option>
-    <option>Iowa</option>
-    <option>Kansas</option>
-    <option>Kentucky</option>
-    <option>Louisiana</option>
-    <option>Maine</option>
-    <option>Maryland</option>
-    <option>Massachusetts</option>
-    <option>Michigan</option>
-    <option>Minnesota</option>
-    <option>Mississippi</option>
-    <option>Missouri</option>
-    <option>Montana</option>
-    <option>Nebraska</option>
-    <option>Nevada</option>
-    <option>New Hampshire</option>
-    <option>New Jersey</option>
-    <option>New Mexico</option>
-    <option>New York</option>
-    <option>North Carolina</option>
-    <option>North Dakota</option>
-    <option>Ohio</option>
-    <option>Oklahoma</option>
-    <option>Oregon</option>
-    <option>Pennsylvania</option>
-    <option>Rhode Island</option>
-    <option>South Carolina</option>
-    <option>South Dakota</option>
-    <option>Tennessee</option>
-    <option>Texas</option>
-    <option>Utah</option>
-    <option>Vermont</option>
-    <option>Virginia</option>
-    <option>Washington</option>
-    <option>West Virginia</option>
-    <option>Wisconsin</option>
-    <option>Wyoming</option>
-    </select>
-  </p>
-
-  <p>
-    Start Time: <input id="starttimeBox" type="date"/> 
-  </p>
-
-  <p>
-    End Time: <input id="endtimeBox" type="date"/> 
+    Fan Jiang: fjiang3@u.rochester.edu
   </p>
   
-  <p>
-    <button id="Search">Search</button>
-  </p>
-  
-  <p1>
-    <table id="CarList" border="1" style="width:100%">
-    </table>
-  </p1>
-
-  <div id="nameDiv"></div>
-    <div id="passwordDiv"></div>
-
-    <!--hr/-->
-
-    <div id="status"></div>
   </body>
 </html>
