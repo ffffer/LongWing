@@ -21,8 +21,13 @@ var sqlite3 = require("sqlite3").verbose();
 var db = new sqlite3.Database(file);
 db.serialize(function(){
 if(!exists){
+<<<<<<< HEAD
   db.run("CREATE TABLE User (username TEXT PRIMARY KEY, password TEXT, fullname TEXT, email TEXT, telephone TEXT, image TEXT)");
   db.run("CREATE TABLE Car (carplate TEXT, carmake TEXT, carmodel TEXT, caryear TEXT, username TEXT, city TEXT, state TEXT , starttime TIMESTAMP, endtime TIMESTAMP, description TEXT , ifreserve TEXT)");
+=======
+  db.run("CREATE TABLE User (username TEXT PRIMARY KEY, password TEXT, fullname TEXT, email TEXT, telephone TEXT)");
+  db.run("CREATE TABLE Car (carplate TEXT PRIMARY KEY, carmake TEXT, carmodel TEXT, caryear TEXT, username TEXT, city TEXT, state TEXT , starttime TIMESTAMP, endtime TIMESTAMP, description TEXT , ifreserve TEXT)");
+>>>>>>> e9d8dac282516885cafc98acbb50484b9ea866f3
   db.run("CREATE TABLE Reserve (carplate TEXT PRIMARY KEY, username TEXT, starttime TIMESTAMP, endtime TIMESTAMP)");
   console.log("Creating User table in LongWing database.");
 }
@@ -132,8 +137,12 @@ app.get('/cars/*', function (req, res) {
     var retstate = postBody[1];
     var retst = postBody[2].split("-");
     var retet = postBody[3].split("-");
+<<<<<<< HEAD
     console.log(postBody);
     var argu = "SELECT carplate, carmake, carmodel ,caryear, username, starttime, endtime, description FROM Car WHERE city='"+retcity+"' AND state='"+retstate+"'";
+=======
+    var argu = "SELECT carplate, carmake, carmodel ,caryear, username, starttime, endtime, description FROM Car WHERE city='"+retcity+"' AND state='"+retstate+"' AND ifreserve='0'";
+>>>>>>> e9d8dac282516885cafc98acbb50484b9ea866f3
     db.serialize(function(){
       db.all(argu, function(err,row){
           if(err !== null){
@@ -145,7 +154,11 @@ app.get('/cars/*', function (req, res) {
           }else{
             var carlist = [];
             for(i=0; i<row.length; i++){
+<<<<<<< HEAD
               var retval = {carpla: row[i].carplate, carm: row[i].carmake, carmo: row[i].carmodel, cary: row[i].caryear, usern: row[i].username, city: retcity, state: retstate, starttime: row[i].starttime, endtime: row[i].endtime, description: row[i].description};
+=======
+              var retval = {carpla: row[i].carplate,carm: row[i].carmake, carmo: row[i].carmodel, cary: row[i].caryear, usern: row[i].username, city: retcity, state: retstate, starttime: row[i].starttime, endtime: row[i].endtime, description: row[i].description};
+>>>>>>> e9d8dac282516885cafc98acbb50484b9ea866f3
               var tempst = row[i].starttime.split("-");
               var tempet = row[i].endtime.split("-");
               if( ( new Date(tempst[0],tempst[1],tempst[2]) <= new Date(retst[0],retst[1],retst[2]) ) && ( new Date(tempet[0],tempet[1],tempet[2]) >= new Date(retet[0],retet[1],retet[2]) )){
